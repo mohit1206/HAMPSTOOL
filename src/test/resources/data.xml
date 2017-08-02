@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container name="root">
+	<container name="Environments">
+		<container name="ITV1">
+			<field name="url"
+				value="https://billingcentral-itv1.foss.dev.qintra.com/billcent/appl_logon_jsp.html"></field>
+
+		</container>
+	</container>
+	<container name="CommonData">
+		<container name="BookMyshowHomePage">
+			<field name="tbx_username" value="scgupta" type="mandatory"></field>
+			<field name="tbx_password" value="June@2017" type="mandatory"></field>
+			<field name="btn_login" value="wait-2:click" type="mandatory"></field>
+		</container>
+	</container>
+</container>
