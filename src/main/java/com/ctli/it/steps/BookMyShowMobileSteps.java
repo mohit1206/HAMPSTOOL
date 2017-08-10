@@ -16,12 +16,13 @@ public class BookMyShowMobileSteps extends ExtendingSteps {
 	@Step
 	public void clickComingSoon() throws InterruptedException
 	{
-	WebDriverWait wait=new WebDriverWait(getDriver(), 220);
-	wait.until(ExpectedConditions.visibilityOf(bhmpa.btn_ComingSoon));
+//	WebDriverWait wait=new WebDriverWait(getDriver(), 220);
+//	wait.until(ExpectedConditions.visibilityOf(bhmpa.btn_ComingSoon));
 //		Thread.sleep(50000);
 //		System.out.println(getDriver().getPageSource());
 	getDriver().manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		bhmpa.btn_ComingSoon.click();
+		//bhmpa.btn_ComingSoon.click();
+		bhmpa.click_ComingSoon();
 //		bhmpa.link_vekhshow.click();
 //		bhmpa.btn_share.click();
 		bhmpa.btn_Filter.click();

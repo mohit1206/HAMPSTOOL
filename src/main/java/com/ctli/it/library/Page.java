@@ -1,21 +1,21 @@
 package com.ctli.it.library;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.*;
 
-import net.serenitybdd.core.pages.PageObject;
-import net.serenitybdd.core.pages.WebElementFacade;
-
+import org.openqa.selenium.By.ByName;
+import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -23,9 +23,11 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.ctli.it.excel.ExcelUtils;
 import com.ctli.it.xml.IntContainerField;
 import com.ctli.it.xml.IntDataContainer;
+
+import net.serenitybdd.core.pages.PageObject;
+import net.serenitybdd.core.pages.WebElementFacade;
 
 
 public abstract class Page extends PageObject {
@@ -295,13 +297,7 @@ public abstract class Page extends PageObject {
 		WaitForPageToLoad(waitTime);
 		return page.getUniqueElementInPage().isVisible();
 	}
-	public String checkParmString(String inputString) {
-		if (inputString.startsWith("%"))
-			return ExcelUtils.getPropertiesValue().getProperty(inputString.substring(1));
-		else
-			return inputString;
-	}
-	//..................................customized webdriver methods..........................
+//...............Customized WebDriver Method...................
 	public void mouseMoveClick(WebElementFacade ele) {
 		try {
 			shouldBeVisible(ele);
@@ -322,295 +318,116 @@ public abstract class Page extends PageObject {
 			fail("Failed mouseHover() with Exception: " + e.getMessage());
 		}
 	}
-
-/*	public void mouseSelect(WebElement hoverElm, WebElement clickElm) {
-		try {
-			mouseHover(hoverElm);
-			WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-			clickElm = dWait.until(ExpectedConditions.visibilityOf(clickElm));
-			Actions action = new Actions(driver);
-			action.moveToElement(clickElm).click(clickElm).build().perform();
-		} catch (Exception e) {
-			fail("Failed mouseSelect() with Exception: " + e.getMessage());
-		}
-	}
-
-	public boolean isMenuOptionAvailable(WebElement hoverElm, WebElement clickElm) {
-		try {
-			mouseHover(hoverElm);
-			WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-			clickElm = dWait.until(ExpectedConditions.visibilityOf(clickElm));
-			Thread.sleep(3000);
-			return !(clickElm.getAttribute("class").contains("disabledLink"));
-		} catch (Exception e) {
-			// fail("Failed mouseSelect() with Exception: " + e.getMessage());
-			return false;
-		}
-	}
-
-	public void mouseSelectWithRetry(WebElement hoverElm, WebElement clickElm) {
-		int attempts = 0;
-		boolean success = false;
-		while (attempts < 3) {
-			try {
-				// System.out.print("attempts = " + attempts + "\n");
-				mouseHover(hoverElm);
-				WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-				Actions action = new Actions(driver);
-				clickElm = dWait.until(ExpectedConditions.visibilityOf(clickElm));
-				action.moveToElement(clickElm).click(clickElm).perform();
-				success = true;
-			} catch (StaleElementReferenceException sere) {
-				System.out.print("StaleElementReferenceException\n");
-			} catch (NoSuchElementException nsee) {
-				System.out.print("NoSuchElementException\n");
-			} catch (Exception e) {
-				fail("Failed mouseSelectWithRetry() with Exception: " + e.getMessage());
-			}
-			if (success)
-				break;
-			attempts++;
-		}
-	}
-
-	public void mouseSelectWithRetry(WebElement hoverElm1, WebElement hoverElm2, String clickElmName) {
-		int attempts = 0;
-		boolean success = false;
-		while (attempts < 3) {
-			try {
-				// System.out.print("attempts = " + attempts + "\n");
-				mouseHover(hoverElm1);
-				WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-				Actions action = new Actions(driver);
-				hoverElm2 = dWait.until(ExpectedConditions.visibilityOf(hoverElm2));
-				action.moveToElement(hoverElm2);
-				mouseHover(hoverElm2);
-				dWait = new WebDriverWait(driver, TIME_OUT);
-				WebElement clickElm = dWait
-						.until(ExpectedConditions.visibilityOfElementLocated(ByName.name(clickElmName)));
-				action.moveToElement(clickElm).click(clickElm).perform();
-				success = true;
-			} catch (StaleElementReferenceException sere) {
-				System.out.print("StaleElementReferenceException\n");
-			} catch (NoSuchElementException nsee) {
-				System.out.print("NoSuchElementException\n");
-			} catch (Exception e) {
-				fail("Failed mouseSelectWithRetry() with Exception: " + e.getMessage());
-			}
-			if (success)
-				break;
-			attempts++;
-		}
-	}
 	
-
-	public void click(String locator) {
-		try {
-			waitForPageToLoad();
-			WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-			WebElement element = dWait.until(ExpectedConditions.elementToBeClickable(net.thucydides.core.annotations.findby.By.xpath(locator)));
-			element.click();
-		} catch (Exception e) {
-			fail("Failed click " + locator + " with Exception: " + e.getMessage());
-		}
-	}
-*/
-/*	public void click1(WebElementFacade elm) {
-
-		try {
-//			waitForPageToLoad();
-//			WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-//			elm = dWait.until(ExpectedConditions.elementToBeClickable(elm));
-			shouldBeVisible(elm);
-			elm.click();
-		} catch (Exception e) {
-
-			fail("Failed click " + elm.getTagName() + " with Exception: " + e.getMessage());
-
-		}
-
-	}
-
-	public boolean isVisible(WebElement element) {
-		try {
-			waitForPageToLoad();
-			WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-			dWait.until(ExpectedConditions.visibilityOf(element));
-			return true;
-		} catch (Throwable e) {
-			return false;
-		}
-	}
-
-	public boolean isSelected(WebElement element) {
-		try {
-			waitForPageToLoad();
-			WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-			element = dWait.until(ExpectedConditions.visibilityOf(element));
-			return element.isSelected();
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	public boolean isSelected(String locator) {
-		waitForPageToLoad();
-		WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-		return dWait.until(ExpectedConditions.elementToBeSelected(By.xpath(locator)));
-	}
-
-	*//**
-	 * Type something into an input field. WebDriver doesn't normally clear
-	 * these * before typing, so this method does that first.
-	 *//*
-	public void type(String locator, String text) {
-		waitForPageToLoad();
-		WebElement element = driver.findElement(By.xpath(locator));
-		element.clear();
-		element.sendKeys(text);
-	}
-
-	public void type(WebElement element, String text) {
-		waitForPageToLoad();
-		WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-		element = dWait.until(ExpectedConditions.visibilityOf(element));
-		element.clear();
-		element.sendKeys(text);
-	}
-
-	public void setDropdown(String locator, String value) {
-		try {
-			waitForPageToLoad();
-			WebElement element = driver.findElement(By.xpath(locator));
-			Select select = new Select(element);
-			select.selectByVisibleText(value);
-		} catch (Exception e) {
-			fail("Failed setDropdown " + locator + " with Exception: " + e.getMessage());
-		}
-	}
-
-	public void setDropdown(WebElement element, String value) {
-		try {
-			waitForPageToLoad();
-			Select select = new Select(element);
-			List<WebElement> options = select.getOptions();
-			for (int i = 0; i < options.size(); i++) {
-				String txt = options.get(i).getText();
-				if (txt.contains(value) || txt.equalsIgnoreCase(value)) {
-					select.selectByVisibleText(txt);
-					return;
-				}
-			}
-		} catch (Exception e) {
-			fail("Failed setDropdown " + element.getTagName() + " with Exception: " + e.getMessage());
-		}
-		fail("Failed setDropdown " + element.getTagName() + " Option not found");
-	}
-
-	public boolean verifyElementInDropdown(WebElement element, String value) {
-		try {
-			waitForPageToLoad();
-			Select select = new Select(element);
-			List<WebElement> options = select.getOptions();
-			for (int i = 0; i < options.size(); i++) {
-				String txt = options.get(i).getText();
-				if (txt.contains(value) || txt.equalsIgnoreCase(value))
-					return true;
-
-			}
-		} catch (Exception e) {
-			return false;
-		}
-		return false;
-	}
-
-	public Boolean isEnabled(WebElement element) {
-		waitForPageToLoad();
-		WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-		element = dWait.until(ExpectedConditions.visibilityOf(element));
-		return element.isEnabled();
-	}
-
-	public Boolean isDisplayed(WebElement element) {
-		waitForPageToLoad();
-		WebDriverWait dWait = new WebDriverWait(driver, TIME_OUT);
-		element = dWait.until(ExpectedConditions.visibilityOf(element));
-		return element.isDisplayed();
-	}
-
-	public void waitForPageToLoad() {
-		try {
-			// wait upto 4 min
-			WebDriverWait dWait = new WebDriverWait(driver, 240);
-			WebDriverWait pWait = new WebDriverWait(driver, 3);
-			if (pWait.until(ExpectedConditions.presenceOfElementLocated((By.xpath(PROGRESS_IMAGE_XPATH)))) != null) {
-				if (dWait.until(ExpectedConditions.invisibilityOfElementLocated((By.xpath(PROGRESS_IMAGE_XPATH))))) {
-					return;
-				}else{
-					fail("Page failed to load in 4 min.");
-				}
-			}
-		} catch (WebDriverException we){
-			String msg = we.getMessage();
-			if(msg.contains("Cannot find context with specified id")){
-				return;
-			}else if(msg.contains("Timed out")){
-				return;
-			}else{
-				fail(we.getMessage());
-			}
-		}
-		catch (Exception e) {
-			fail(e.getMessage());
-		}
-	}
-	//...created by Ankit ab73168......
-		public void mouseHoverWithJs(WebElement hoverElm, WebElement clickElm)
-		{
-			try
+			public void mouseHoverWithJs(WebElementFacade hoverElm)
 			{
-				 String javaScript = "var evObj = document.createEvent('MouseEvents');"
-			                + "evObj.initMouseEvent(\"mouseover\",true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);"
-			                + "arguments[0].dispatchEvent(evObj);";
-			        JavascriptExecutor js = (JavascriptExecutor) driver;
-			        js.executeScript(javaScript, hoverElm);
-			        click(clickElm);
-				
-			}
-			 catch (StaleElementReferenceException sere) {
-					System.out.print("StaleElementReferenceException\n");
-				} catch (NoSuchElementException nsee) {
-					System.out.print("NoSuchElementException\n");
-				} catch (Exception e) {
-					fail("Failed java script executor with Exception: " + e.getMessage());
+				try
+				{
+					 String javaScript = "var evObj = document.createEvent('MouseEvents');"
+				                + "evObj.initMouseEvent(\"mouseover\",true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);"
+				                + "arguments[0].dispatchEvent(evObj);";
+				        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+				        js.executeScript(javaScript, hoverElm);
+				        //click(clickElm);
+					
 				}
-		}
-		
-		//added by ab67816
-		public void setDropdownByCompleteLabel(WebElement element, String value) {
-			try {
-				waitForPageToLoad();
-				Thread.sleep(8000);
-				Select select = new Select(element);
-				List<WebElement> options = select.getOptions();
-				for (int i = 0; i < options.size(); i++) {
-					String txt = options.get(i).getText();
-					if (txt.equalsIgnoreCase(value)) {
-						select.selectByVisibleText(txt);
-						return;
+				 catch (StaleElementReferenceException sere) {
+						System.out.print("StaleElementReferenceException\n");
+					} catch (NoSuchElementException nsee) {
+						System.out.print("NoSuchElementException\n");
+					} catch (Exception e) {
+						fail("Failed java script executor with Exception: " + e.getMessage());
 					}
-				}
-			} catch (Exception e) {
-				fail("Failed setDropdown " + element.getTagName() + " with Exception: " + e.getMessage());
 			}
-			fail("Failed setDropdown " + element.getTagName() + " Option not found");
-		}
-		
-}
-		
 			
-		}*/
-
-	
-	
-}
+			public void mouseSelectWithRetry(WebElementFacade hoverElm, WebElementFacade clickElm) {
+				int attempts = 0;
+				boolean success = false;
+				while (attempts < 3) {
+					try {
+						// System.out.print("attempts = " + attempts + "\n");
+						mouseHover(hoverElm);
+						//WebDriverWait dWait = new WebDriverWait(driver, 60);
+						Actions action = new Actions(getDriver());
+						
+						action.moveToElement(clickElm).click(clickElm).perform();
+						success = true;
+					} catch (StaleElementReferenceException sere) {
+						System.out.print("StaleElementReferenceException\n");
+					} catch (NoSuchElementException nsee) {
+						System.out.print("NoSuchElementException\n");
+					} catch (Exception e) {
+						fail("Failed mouseSelectWithRetry() with Exception: " + e.getMessage());
+					}
+					if (success)
+						break;
+					attempts++;
+				}
+			}
+			
+			public void mouseSelectWithRetry(WebElementFacade hoverElm1,WebElementFacade hoverElm2, String clickElmName) {
+				int attempts = 0;
+				boolean success = false;
+				while (attempts < 3) {
+					try {
+						// System.out.print("attempts = " + attempts + "\n");
+						mouseHover(hoverElm1);
+						WebDriverWait dWait = new WebDriverWait(getDriver(), 60);
+						Actions action = new Actions(getDriver());
+						hoverElm2 = (WebElementFacade) dWait.until(ExpectedConditions.visibilityOf(hoverElm2));
+						action.moveToElement(hoverElm2);
+						mouseHover(hoverElm2);
+						dWait = new WebDriverWait(getDriver(), 60);
+						WebElement clickElm = dWait
+								.until(ExpectedConditions.visibilityOfElementLocated(ByName.name(clickElmName)));
+						action.moveToElement(clickElm).click(clickElm).perform();
+						success = true;
+					} catch (StaleElementReferenceException sere) {
+						System.out.print("StaleElementReferenceException\n");
+					} catch (NoSuchElementException nsee) {
+						System.out.print("NoSuchElementException\n");
+					} catch (Exception e) {
+						fail("Failed mouseSelectWithRetry() with Exception: " + e.getMessage());
+					}
+					if (success)
+						break;
+					attempts++;
+				}
+			}
+			
+			public void mouseSelectWithRetry(WebElementFacade hoverElm1, WebElementFacade hoverElm2, WebElementFacade hoverElm3 , String clickElmName) {
+				int attempts = 0;
+				boolean success = false;
+				while (attempts < 3) {
+					try {
+						// System.out.print("attempts = " + attempts + "\n");
+						mouseHover(hoverElm1);
+						WebDriverWait dWait = new WebDriverWait(getDriver(), 60);
+						Actions action = new Actions(getDriver());
+						hoverElm2 = (WebElementFacade) dWait.until(ExpectedConditions.visibilityOf(hoverElm2));
+						action.moveToElement(hoverElm2);
+						
+						mouseHover(hoverElm2);
+						dWait = new WebDriverWait(getDriver(), 60);
+						hoverElm3 = (WebElementFacade) dWait.until(ExpectedConditions.visibilityOf(hoverElm3));
+						action.moveToElement(hoverElm3);
+						
+						mouseHover(hoverElm3);
+						dWait = new WebDriverWait(getDriver(), 60);
+						WebElement clickElm = dWait.until(ExpectedConditions.visibilityOfElementLocated(ByXPath.xpath(clickElmName)));
+						action.moveToElement(clickElm).click(clickElm).perform();
+						success = true;
+					} catch (StaleElementReferenceException sere) {
+						System.out.print("StaleElementReferenceException\n");
+					} catch (NoSuchElementException nsee) {
+						System.out.print("NoSuchElementException\n");
+					} catch (Exception e) {
+						fail("Failed mouseSelectWithRetry() with Exception: " + e.getMessage());
+					}
+					if (success)
+						break;
+					attempts++;
+				}	
+			
+			
+}}

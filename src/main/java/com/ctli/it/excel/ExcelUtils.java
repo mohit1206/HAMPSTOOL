@@ -1,30 +1,25 @@
 package com.ctli.it.excel;
 
-import java.util.Iterator;
-import java.util.Properties;
-
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 
 public class ExcelUtils {
@@ -36,7 +31,7 @@ private	static Properties prop;
 		String pathName = null;
 		String fileName = null;
 		String tabName = null;
-		System.out.println(simonProp.getProperty("FeatureInput")+"featureinput");
+		System.out.println(prop.getProperty("FeatureInput")+"featureinput");
 		if (simonProp.getProperty("FeatureInputDirectory") != null && simonProp.getProperty("FeatureInput") != null
 				&& simonProp.getProperty("FeatureTab") != null) {
 
@@ -81,7 +76,7 @@ private	static Properties prop;
 		System.out.println(afgg);
 		
 		 prop.put("FeatureInputDirectory", afgg);
-		 prop.put("FeatureInput", "Demo.xlsx");
+		 prop.put("FeatureInput", "ReadingExcel.xlsx");
 		 prop.put("FeatureTab", "TEST");
 		readFeatureInputFromExcelFile(prop);
 	}
@@ -92,6 +87,120 @@ private	static Properties prop;
 		return prop;
 		
 		
+	}
+	
+	
+	public static void WriteInsertResultToExcel2( Properties superFinalResult, String ResultTab)
+			throws  IOException {
+		ArrayList<String> al=new ArrayList<String>();
+		String pathName = prop.getProperty("FeatureInputDirectory");
+		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+		String fileName = "Demower" + ".xlsx";
+		String tabName = ResultTab;
+		XSSFRow row;
+		XSSFWorkbook workbook = null;
+		boolean newSheet = false;
+		try {
+			Path pHome = Paths.get(pathName, fileName);
+			String sFileToWrite = pHome.toString();
+			File file = new File(sFileToWrite);
+			if (file.exists()) {
+				FileInputStream fileOut = new FileInputStream(sFileToWrite);
+				workbook = (XSSFWorkbook) WorkbookFactory.create(fileOut);
+				int noofsheet = workbook.getNumberOfSheets();
+				System.out.println(noofsheet);
+				int count1=0;
+				for(int k=0;k<noofsheet;k++)
+				{
+					al.add(workbook.getSheetName(k));
+					count1++;
+					if(al.get(k).equals(tabName))
+					{
+						System.out.println("Existing sheet");
+						//newSheet = true;
+						break;
+						
+					}
+					
+					else if(count1==noofsheet)
+					{
+						newSheet = true;
+						
+					}
+					
+				}
+			} else {
+				workbook = new XSSFWorkbook();
+				newSheet = true;
+			}
+			
+			
+
+			int rowid = 0;
+			Set keySet = superFinalResult.keySet();
+			Object[] keys = keySet.toArray();
+			
+			System.out.println(keys.length+"length");
+
+			// add headers
+			if (newSheet) {
+				XSSFSheet spreadsheet = workbook.createSheet(tabName);
+				row = spreadsheet.createRow(rowid++);
+				boolean flag=true;
+				for (int i = 0; i < keys.length; i++) {
+					if (i == 0) {
+						String sKey = (String) keys[i];
+						row.createCell(i).setCellValue((String) sKey);
+					} else {
+						String sKey = (String) keys[i];
+						row.createCell(i).setCellValue((String) sKey);
+					}
+				}
+				// add data
+				row = spreadsheet.createRow(rowid++);
+				for (int i = 0; i < keys.length; i++) {
+					if (i == 0) {
+						String sKey = (String) keys[i];
+						String value = superFinalResult.getProperty(sKey);
+						row.createCell(i).setCellValue(value);
+					} else {
+						String sKey = (String) keys[i];
+						String value = superFinalResult.getProperty(sKey);
+						row.createCell(i).setCellValue(value);
+					}
+				}
+			} else {
+
+				// append data
+				XSSFSheet spreadsheet = workbook.getSheet(tabName);
+				row = spreadsheet.createRow(spreadsheet.getLastRowNum() + 1);
+				for (int i = 0; i < keys.length; i++) {
+					if (i == 0) {
+						String sKey = (String) keys[i];
+						String value = superFinalResult.getProperty(sKey);
+						row.createCell(i).setCellValue(value);
+					} else {
+						String sKey = (String) keys[i];
+						String value = superFinalResult.getProperty(sKey);
+						row.createCell(i).setCellValue(value);
+					}
+
+				}
+			}
+
+			FileOutputStream fileOut = new FileOutputStream(sFileToWrite);
+			workbook.write(fileOut);
+			fileOut.flush();
+			workbook.close();
+			fileOut.close();
+
+		} catch (Exception e) {
+			System.out.println("InsertData failed. Write result data to excel failed. Please check.");
+			e.printStackTrace();
+		//	throw new InsertDataException("InsertData failed. Write result data to excel failed. Please check.");
+		} finally {
+			workbook.close();
+		}
 	}
 	
 

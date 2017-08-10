@@ -24,9 +24,6 @@ public class BookMyshowHomePage extends ExtendingPage {
 	
 	@FindBy(xpath="//a[text()='Sunil Grover Live']")
 	public WebElementFacade sunilShow;
-	
-	@FindBy(xpath="//a[text()='Gmail']")
-	public WebElementFacade btn_Gmail;
 
 	@Override
 	public WebElementFacade getUniqueElementInPage() {
@@ -64,10 +61,5 @@ public class BookMyshowHomePage extends ExtendingPage {
 		jsx.executeScript("window.scrollBy(450,0)", "");
 		sunilShow.click();
 		
-	}
-	
-	public void click_ndnkd()
-	{
-	//click1( btn_Gmail);
 	}
 }

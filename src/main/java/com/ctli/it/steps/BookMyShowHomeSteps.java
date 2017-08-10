@@ -8,16 +8,11 @@ import net.thucydides.core.annotations.Step;
 public class BookMyShowHomeSteps extends ExtendingSteps {
 	BookMyshowHomePage bhp;
 	@Step
-	public void homePage(String url)
+	public void homePage()
 	{
-		//System.out.println(commonData.getContainer(bhp.getClass().getSimpleName()).getFieldValue("tbx_usrname"));
 		System.out.println("In Login Page");
-		System.out.println("url value"+url);
-		//bhp.openAt(bhp.checkParmString(url));
-		bhp.openAt("https://www.google.co.in/?gfe_rd=cr&ei=KHV9WaaBFpTT8gfNwa_oDQ");
-		bhp.click_ndnkd();
+		bhp.openAt("https://in.bookmyshow.com");
 		//maximize();
-		//System.out.println(commonData.getContainer(bhp.getClass().getSimpleName()).getFieldValue("tbx_usrname"));
 	}
 	
 	@Step
@@ -28,8 +23,7 @@ public class BookMyShowHomeSteps extends ExtendingSteps {
 		bhp.getUniqueElementInPage();
 		bhp.clickCity();
 		Thread.sleep(6000);
-		IntDataContainer actualContainer= commonData;
-	
+		
 		
 	}
 	@Step
@@ -50,6 +44,7 @@ public class BookMyShowHomeSteps extends ExtendingSteps {
 	{
 		System.out.println("clcik on sunil grover show");
 		bhp.clcikSunilGroverPage();
-	}
+		IntDataContainer container = commonData;
+		}
 	
 }
